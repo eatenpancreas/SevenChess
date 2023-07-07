@@ -1,14 +1,12 @@
 <script>
 	import Tile from '$lib/svelte-components/chess-game/Tile.svelte';
-	export let y;
+	export let yraw = 0;
+	export let flipped = false;
+	$: y = flipped? 7 - yraw : yraw;
+	export let board;
 </script>
 <div class='grid-cols-8 grid w-full flex-1'>
-	<Tile x={0} {y}></Tile>
-	<Tile x={1} {y}></Tile>
-	<Tile x={2} {y}></Tile>
-	<Tile x={3} {y}></Tile>
-	<Tile x={4} {y}></Tile>
-	<Tile x={5} {y}></Tile>
-	<Tile x={6} {y}></Tile>
-	<Tile x={7} {y}></Tile>
+	{#each {length: 8} as _, xraw}
+		<Tile {xraw} {flipped} {y} {board}></Tile>
+	{/each}
 </div>
