@@ -1,7 +1,7 @@
-import type { PieceType } from '../../../types/chess/PieceType';
+import type { PieceType } from "$lib/types/chess/PieceInfo";
 
 export class ChessTile {
-	piece: PieceType = "empty";
+	piece: PieceType = "  ";
 
 	constructor(piece: PieceType) {
 		this.piece = piece;

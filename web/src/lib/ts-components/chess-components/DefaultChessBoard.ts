@@ -1,13 +1,13 @@
-import type { PieceType } from '../../../types/chess/PieceType';
+import type { PieceType } from '$lib/types/chess/PieceInfo';
 
 export const default_chessboard_tiles: PieceType[] = [
-	"rook",		"knight",	"bishop",	"queen",	"king",		"bishop",	"knight",	"rook",
-	"pawn",		"pawn",		"pawn",		"pawn",		"pawn",		"pawn",		"pawn",		"pawn",
-	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",
-	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",
-	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",
-	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",	"empty",
-	"pawn",		"pawn",		"pawn",		"pawn",		"pawn",		"pawn",		"pawn",		"pawn",
-	"rook",		"knight",	"bishop",	"queen",	"king",		"bishop",	"knight",	"rook",
+	"rl", "nl",	"bl",	"ql",	"kl",	"bl",	"nl",	"rl",
+	"pl", "pl",	"pl",	"pl",	"pl",	"pl",	"pl",	"pl",
+	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
+	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
+	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
+	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
+	"pd", "pd",	"pd",	"pd",	"pd",	"pd",	"pd",	"pd",
+	"rd", "nd",	"bd",	"qd",	"kd",	"bd",	"nd",	"rd",
 ];
 

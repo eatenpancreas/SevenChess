@@ -1,7 +1,8 @@
 
-export function tileColor(x: number, y: number) {
-	if ((x + y) % 2 === 0) { return "bg-teal-500" }
-	else { return "bg-red-200" }
+export function tileColor(x: number, y: number, isSelected = false) {
+
+	if ((x + y) % 2 === 0) { return isSelected? "bg-teal-300": "bg-teal-500" }
+	else { return isSelected? "bg-red-50": "bg-red-200" }
 }
 
 export function numToLetter(num: number) {
