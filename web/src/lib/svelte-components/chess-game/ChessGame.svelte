@@ -8,7 +8,7 @@
 	const flipped = true;
 	const board = new ChessBoard();
 
-	function handleClickOutside(event) {
+	function handleClickOutside() {
 		selected.set(null);
 	}
 </script>

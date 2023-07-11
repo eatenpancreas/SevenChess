@@ -17,7 +17,7 @@
 	});
 	onDestroy(unsub);
 
-	function handleTileClick(e) {
+	function handleTileClick() {
 		if (board.getTile(x, y).piece !== '  ') {
 			selected.update((selectedPrev => {
 				if (selectedPrev && selectedPrev.x === x && selectedPrev.y === y) {
