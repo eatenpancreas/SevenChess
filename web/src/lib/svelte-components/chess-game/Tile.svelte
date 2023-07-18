@@ -1,9 +1,10 @@
 <script>
 	import { numToLetter, tileColor } from '$lib/ts-components/chess-display/TileHelper';
 	import ChessPiece from '$lib/svelte-components/chess-game/ChessPiece.svelte';
-	import { selected } from '$lib/stores/Chess';
+	import { selected, destinations } from '$lib/stores/Chess';
 	import { onDestroy } from 'svelte';
 	import Destination from '$lib/svelte-components/chess-game/Destination.svelte';
+	import { selectDestinations, selectTile } from '$lib/ts-components/chess-components/TileSelection';
 
 	export let x = 0;
 	export let y = 0;
@@ -11,7 +12,7 @@
 
 	let isSelected = false;
 	const unsub = selected.subscribe((selectedPos) => {
-		isSelected = selectedPos !== null
+		isSelected = selectedPos !== null && selectedPos !== undefined
 			&& selectedPos.x === x
 			&& selectedPos.y === y
 	});
@@ -19,11 +20,9 @@
 
 	function handleTileClick() {
 		if (board.getTile(x, y).piece !== '  ') {
-			selected.update((selectedPrev => {
-				if (selectedPrev && selectedPrev.x === x && selectedPrev.y === y) {
-					return null;
-				} else { return {x, y} }
-			}));
+			// selects a piece, or none if it is the same piece
+			destinations.update((d) => {selectDestinations(d, x, y)});
+			selected.update((s) => {selectTile(s, x, y)});
 		}
 	}
 	function handleTileRightClick(e) {
@@ -43,6 +42,6 @@
 		<ChessPiece name={board.getTile(x, y).piece} {isSelected}></ChessPiece>
 	</div>
 	<div class='absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center'>
-		<Destination></Destination>
+		<Destination {x} {y}></Destination>
 	</div>
 </div>

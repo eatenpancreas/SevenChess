@@ -10,8 +10,9 @@
 	<svg width={isSelected? "85%": "80%"}
 			 viewBox='0 0 45 45'
 			 class={`transition  ${isSelected?
-			 "drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] mb-4 " :
-			 "drop-shadow-[0_7px_10px_rgba(0,0,0,0.3)] shadow-black "
+			 "drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] mb-4" :
+			 "drop-shadow-[0_7px_10px_rgba(0,0,0,0.2)] " +
+			  "hover:drop-shadow-[0_8px_10px_rgba(0,0,0,0.4)] hover:pt-2"
 			 }`}>
 		{@html svg}
 	</svg>
