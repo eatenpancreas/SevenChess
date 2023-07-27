@@ -18,6 +18,15 @@ export function add_move(
 			move_pos = addDir(move_pos, move.move.x, move.move.y, piece);
 			if (!move_pos || move_pos.x < 0 || move_pos.x >= board.width || move_pos.y < 0 || move_pos.y >= board.height) break;
 
+			// checks for custom
+			if (move.rules.moveIndexRule) {
+				const index = board.getTile(x, y)?.move_index;
+				if (index === undefined) break;
+
+				// results in no destination if custom rule is returned false
+				if (!move.rules.moveIndexRule(index)) break;
+			}
+
 			// checks all required paths
 			if (move.rules.needsPath) {
 				let doBreak = false;

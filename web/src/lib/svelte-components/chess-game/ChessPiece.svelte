@@ -1,5 +1,5 @@
 <script>
-	import { piece_exports } from '$lib/assets/pieces/Pieces';
+	import { piece_exports } from '$lib/assets/pieces/PieceGFX';
 
 	export let name = '  ';
 	export let isSelected = false;

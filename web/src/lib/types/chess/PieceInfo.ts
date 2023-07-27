@@ -13,10 +13,11 @@ export type Move = {
 
 type MoveRules = {
 	needsPath?: v2[],
+	needsSafeSquares?: v2[],
 	canEnPassant?: boolean,
 
 	createsEnPassant?: boolean,
-	onlyOnFirstMove?: boolean,
+	moveIndexRule?: (moveIndex: number) => boolean,
 	canPromote?: PieceTypeSimple[] | false,
 
 	canNotCapture?: boolean,
@@ -24,7 +25,8 @@ type MoveRules = {
 
 	castlingRights?: {
 		otherPiece: PieceTypeSimple,
-		direction: "left" | "right"
+		otherPosition: v2,
+		otherLandingSquare: v2,
 	}
 }
 

@@ -14,7 +14,7 @@
 	const unsub = selected.subscribe((selectedPos) => {
 		isSelected = selectedPos !== null && selectedPos !== undefined
 			&& selectedPos.x === x
-			&& selectedPos.y === y
+			&& selectedPos.y === y;
 	});
 	onDestroy(unsub);
 
@@ -30,7 +30,9 @@
 
 	function handleTileClick() {
 		const piece = ChessBoard.getTile(x, y, $board)?.piece;
-		if (piece !== undefined && piece !== '  ') {
+		if (piece !== undefined && piece !== '  '
+			&& ChessBoard.isPiecesTurn(piece, $board)) {
+
 			// selects a piece, or none if it is the same piece
 			let tempSelected = false;
 			selected.update((s) => { return tempSelected = selectTile(s, x, y); })

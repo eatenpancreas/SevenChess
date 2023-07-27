@@ -27,7 +27,7 @@ const Pawn: PieceInfo = {
 		{ move: { x: 0, y: 2, amount: 1 },
 			rules: {
 				createsEnPassant: true,
-				onlyOnFirstMove: true,
+				moveIndexRule: (moveIndex) => moveIndex === 0,
 				canNotCapture: true,
 				needsPath: [{ x: 0, y: 1 }]
 			},

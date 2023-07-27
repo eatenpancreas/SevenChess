@@ -1,17 +1,52 @@
 import { ChessTile } from '$lib/ts-components/chess-components/ChessTile';
 import { default_chessboard_tiles } from '$lib/ts-components/chess-components/DefaultChessBoard';
 import type { PieceType } from '$lib/types/chess/PieceInfo';
+import type { Scores } from '$lib/types/chess/Main';
+import { getPieceInfo } from '$lib/ts-components/chess-components/ChessPieceLib';
 
 export class ChessBoard {
 	move = 0;
 	height = 8;
 	width = 8;
+	scores: Scores = { win: false, l: 0, d: 0 }
 	tiles: ChessTile[] = [];
 
 	constructor() {
 		default_chessboard_tiles.map(default_tile => {
 			this.tiles.push(new ChessTile(default_tile));
 		});
+	}
+
+	calculateScores() {
+		this.scores.l = 0;
+		this.scores.d = 0;
+
+		this.tiles.map(tile => {
+			if (tile.piece !== "  ") {
+				const piece_value = getPieceInfo(tile.piece)?.value;
+				const piece_color = tile.piece.substr(1, 1);
+
+				if (typeof piece_value === "number") {
+					if (piece_color === "l") this.scores.l += piece_value;
+					else if (piece_color === "d") this.scores.d += piece_value;
+				} else if (piece_value === "infinite") {
+					if (piece_color === "l") this.scores.win = piece_color;
+					else if (piece_color === "d") this.scores.win = piece_color;
+				} else {
+
+				}
+
+			}
+		});
+	}
+
+	static isPiecesTurn(piece: PieceType, board: ChessBoard): boolean {
+		if (!board) return false;
+
+		const piece_color = piece.substr(1, 1);
+		console.log(board.move % 2 === 0 ? piece_color === "l" : piece_color === "d");
+
+		return board.move % 2 === 0 ? piece_color === "l" : piece_color === "d";
 	}
 
 	getTile(x: number, y: number): ChessTile | undefined { return ChessBoard.getTile(x, y, this); }
@@ -56,8 +91,13 @@ export class ChessBoard {
 
 		if (!from_tile || !to_tile) return undefined;
 
+		to_tile.move_index = from_tile.move_index + 1;
+		board.move += 1;
+
 		to_tile.piece = from_tile.piece;
 		from_tile.piece = "  ";
+
+		board.calculateScores();
 	}
 }
 

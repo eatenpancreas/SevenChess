@@ -11,3 +11,9 @@ export type Destination = {
 	from_position: v2,
 	piece_type: PieceType,
 }
+
+export type Scores = {
+	win: false | "l" | "d" | "draw",
+	l: number,
+	d: number
+}
