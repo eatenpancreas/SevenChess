@@ -2,65 +2,34 @@ import type {PieceInfo} from '$lib/types/chess/PieceInfo';
 
 const Pawn: PieceInfo = {
 	piece: "p",
-	rules: {
-		canPromote: ["q", "r", "b", "n"],
-		willEndGame: false
-	},
+	value: 1,
 	moves: [
-		{ move: { x: 1, y: 1 },
+		{ move: { x: 1, y: 1, amount: 1},
 			rules: {
-				canJump: false,
 				canEnPassant: true,
-
-				createsEnPassant: false,
-				onlyOnFirstMove: false,
-
 				canNotMove: true,
-				canNotCapture: false,
-
-				castlingRights: false,
+				canPromote: ["q", "r", "b", "n"],
 			},
 		},
-		{ move: { x: 0, y: 1 },
+		{ move: { x: 0, y: 1, amount: 1 },
 			rules: {
-				canJump: false,
-				canEnPassant: false,
-
-				createsEnPassant: false,
-				onlyOnFirstMove: false,
-
 				canNotCapture: true,
-				canNotMove: false,
-
-				castlingRights: false,
+				canPromote: ["q", "r", "b", "n"],
 			},
 		},
-		{ move: { x: -1, y: 1 },
+		{ move: { x: -1, y: 1, amount: 1 },
 			rules: {
-				canJump: false,
 				canEnPassant: true,
-
-				createsEnPassant: false,
-				onlyOnFirstMove: false,
-
-				canNotCapture: false,
 				canNotMove: true,
-
-				castlingRights: false,
+				canPromote: ["q", "r", "b", "n"],
 			},
 		},
-		{ move: { x: 0, y: 2 },
+		{ move: { x: 0, y: 2, amount: 1 },
 			rules: {
-				canJump: false,
-				canEnPassant: false,
-
 				createsEnPassant: true,
 				onlyOnFirstMove: true,
-
 				canNotCapture: true,
-				canNotMove: false,
-
-				castlingRights: false,
+				needsPath: [{ x: 0, y: 1 }]
 			},
 		},
 	]

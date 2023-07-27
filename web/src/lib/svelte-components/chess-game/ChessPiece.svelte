@@ -3,7 +3,7 @@
 
 	export let name = '  ';
 	export let isSelected = false;
-	let svg = piece_exports[name];
+	$: svg = piece_exports[name];
 </script>
 
 {#if svg}

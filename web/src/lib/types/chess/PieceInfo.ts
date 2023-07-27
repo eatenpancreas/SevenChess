@@ -1,44 +1,37 @@
-
+import type { v2 } from '$lib/types/chess/Main';
 
 export type PieceInfo = {
 	piece: PieceTypeSimple;
+	value: number | "infinite";
 	moves: Move[];
-	rules: {
-		canPromote: PieceTypeSimple[] | false,
-		willEndGame: boolean,
-	} | false,
 }
 
-type Move = {
-	move: MoveDir | MovePos,
-	rules: MoveRules | false,
+export type Move = {
+	move: MoveDir,
+	rules: MoveRules,
 }
 
 type MoveRules = {
-	canJump: boolean,
-	canEnPassant: boolean,
+	needsPath?: v2[],
+	canEnPassant?: boolean,
 
-	createsEnPassant: boolean,
-	onlyOnFirstMove: boolean,
+	createsEnPassant?: boolean,
+	onlyOnFirstMove?: boolean,
+	canPromote?: PieceTypeSimple[] | false,
 
-	canNotCapture: boolean,
-	canNotMove: boolean,
+	canNotCapture?: boolean,
+	canNotMove?: boolean,
 
-	castlingRights: {
+	castlingRights?: {
 		otherPiece: PieceTypeSimple,
 		direction: "left" | "right"
-	} | false,
+	}
 }
 
 type MoveDir = {
 	x: number,
 	y: number,
 	amount: number | "infinite"
-}
-
-type MovePos = {
-	x: number,
-	y: number,
 }
 
 export type PieceType = "  "

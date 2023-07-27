@@ -1,15 +1,14 @@
 <script>
 	import Row from '$lib/svelte-components/chess-game/Row.svelte';
-	import { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
 	import { clickOutside } from '$lib/ts-components/general/Click';
-	import { selected } from '$lib/stores/Chess';
+	import { destinations, selected } from '$lib/stores/Chess';
 
 
 	const flipped = true;
-	const board = new ChessBoard();
 
 	function handleClickOutside() {
 		selected.set(null);
+		destinations.set([]);
 	}
 </script>
 
@@ -20,7 +19,7 @@
 	<div style='height: 95%' class='sm:h-3/4 mx-auto aspect-square'>
 		<div class='h-full flex flex-col'>
 			{#each {length: 8} as _, row_index}
-				<Row {row_index} {flipped} {board}></Row>
+				<Row {row_index} {flipped}></Row>
 			{/each}
 		</div>
 	</div>

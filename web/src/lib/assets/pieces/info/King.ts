@@ -2,45 +2,35 @@ import type {PieceInfo} from '$lib/types/chess/PieceInfo';
 
 const King: PieceInfo = {
 	piece: "k",
-	rules: {
-		canPromote: false,
-		willEndGame: true
-	},
+	value: "infinite",
 	moves: [
-		{ move: { x: 1, y: 1, },
-			rules: false,
+		{ move: { x: 1, y: 1, amount: 1},
+			rules: {},
 		},
-		{ move: { x: 0, y: 1, },
-			rules: false,
+		{ move: { x: 0, y: 1, amount: 1},
+			rules: {},
 		},
-		{ move: { x: -1, y: 1, },
-			rules: false,
+		{ move: { x: -1, y: 1, amount: 1},
+			rules: {},
 		},
-		{ move: { x: 1, y: 0, },
-			rules: false,
+		{ move: { x: 1, y: 0, amount: 1},
+			rules: {},
 		},
-		{ move: { x: -1, y: 0, },
-			rules: false,
+		{ move: { x: -1, y: 0, amount: 1},
+			rules: {},
 		},
-		{ move: { x: 1, y: -1, },
-			rules: false,
+		{ move: { x: 1, y: -1, amount: 1},
+			rules: {},
 		},
-		{ move: { x: 0, y: -1, },
-			rules: false,
+		{ move: { x: 0, y: -1, amount: 1},
+			rules: {},
 		},
-		{ move: { x: -1, y: -1, },
-			rules: false,
+		{ move: { x: -1, y: -1, amount: 1},
+			rules: {},
 		},
-		{ move: { x: 2, y: 0, },
+		{ move: { x: 2, y: 0, amount: 1},
 			rules: {
-				canJump: false,
-				canEnPassant: false,
-
-				createsEnPassant: false,
 				onlyOnFirstMove: true,
-
-				canNotMove: false,
-				canNotCapture: false,
 
 				castlingRights: {
 					otherPiece: 'r',
@@ -48,16 +38,10 @@ const King: PieceInfo = {
 				},
 			},
 		},
-		{ move: { x: -2, y: 0, },
+		{ move: { x: -2, y: 0, amount: 1},
 			rules: {
-				canJump: false,
-				canEnPassant: false,
-
-				createsEnPassant: false,
 				onlyOnFirstMove: true,
-
 				canNotMove: true,
-				canNotCapture: false,
 
 				castlingRights: {
 					otherPiece: 'r',

@@ -2,19 +2,19 @@ import type {PieceInfo} from '$lib/types/chess/PieceInfo';
 
 const Bishop: PieceInfo = {
 	piece: "b",
-	rules: false,
+	value: 3,
 	moves: [
 		{ move: { x: 1, y: 1, amount: "infinite" },
-			rules: false,
+			rules: {},
 		},
 		{ move: { x: -1, y: 1, amount: "infinite" },
-			rules: false,
+			rules: {},
 		},
 		{ move: { x: 1, y: -1, amount: "infinite" },
-			rules: false,
+			rules: {},
 		},
 		{ move: { x: -1, y: -1, amount: "infinite" },
-			rules: false,
+			rules: {},
 		},
 	]
 }
