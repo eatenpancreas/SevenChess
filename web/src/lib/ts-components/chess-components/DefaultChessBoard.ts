@@ -5,7 +5,7 @@ export const default_chessboard_tiles: PieceType[] = [
 	"pl", "pl",	"pl",	"pl",	"pl",	"pl",	"pl",	"pl",
 	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
 	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
-	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
+	"  ", "  ",	"  ",	"pl",	"  ",	"  ",	"  ",	"  ",
 	"  ", "  ",	"  ",	"  ",	"  ",	"  ",	"  ",	"  ",
 	"pd", "pd",	"pd",	"pd",	"pd",	"pd",	"pd",	"pd",
 	"rd", "nd",	"bd",	"qd",	"kd",	"bd",	"nd",	"rd",

@@ -19,12 +19,14 @@ export function add_move(
 			if (!move_pos || move_pos.x < 0 || move_pos.x >= board.width || move_pos.y < 0 || move_pos.y >= board.height) break;
 
 			// checks for custom
-			if (move.rules.moveIndexRule) {
+			if (move.rules.customMoveRule) {
 				const index = board.getTile(x, y)?.move_index;
 				if (index === undefined) break;
 
 				// results in no destination if custom rule is returned false
-				if (!move.rules.moveIndexRule(index)) break;
+				if (!move.rules.customMoveRule({
+					moveIndex: index,
+				})) break;
 			}
 
 			// checks all required paths
@@ -55,6 +57,38 @@ export function add_move(
 				break;
 			}
 
+			// castling move
+			if (move.rules.castlingRights) {
+				const castling = move.rules.castlingRights;
+
+				if (castling.otherPosition && castling.otherLandingSquare) {
+					const otherTile = board.getTile(x + castling.otherPosition.x, y + castling.otherPosition.y);
+					if (!otherTile) break;
+
+					console.log("xxxxx")
+
+					if (otherTile.piece.substr(0, 1) === castling.otherPiece
+						&& castling.otherCustomMoveRule({ moveIndex: otherTile.move_index })) {
+
+						console.log("castling");
+
+						destinations.push({
+							position: { x: move_pos.x, y: move_pos.y },
+							type: "CASTLE",
+							from_position: { x: x, y: y },
+							piece_type: piece,
+							additional_movements: [{
+								position: { x: x + castling.otherLandingSquare.x, y: y + castling.otherLandingSquare.y },
+								type: "CASTLE",
+								from_position: { x: x + castling.otherPosition.x, y: y + castling.otherPosition.y },
+								piece_type: otherTile.piece,
+							}]
+						})
+					}
+				}
+				break;
+			}
+
 			// regular move
 			if (!move.rules.canNotMove) {
 				destinations.push({
@@ -65,6 +99,4 @@ export function add_move(
 				})
 			}
 	}
-
-
 }

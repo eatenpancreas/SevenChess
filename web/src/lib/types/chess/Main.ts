@@ -7,9 +7,10 @@ export type v2  = {
 
 export type Destination = {
 	position: v2,
-	type: "MOVE" | "CAPTURE"
+	type: "MOVE" | "CAPTURE" | "CASTLE",
 	from_position: v2,
 	piece_type: PieceType,
+	additional_movements?: Destination[]
 }
 
 export type Scores = {

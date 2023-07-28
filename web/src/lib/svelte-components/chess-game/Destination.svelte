@@ -31,6 +31,20 @@
 				destination.position.x,
 				destination.position.y,
 			);
+
+			if (destination.additional_movements) {
+				destination.additional_movements.map(additional_movement => {
+					if (!additional_movement.from_position || !additional_movement.position) return;
+					board.moveAdditionalPiece(
+						additional_movement.from_position.x,
+						additional_movement.from_position.y,
+						additional_movement.position.x,
+						additional_movement.position.y,
+					);
+					console.log('move extra piece', additional_movement.from_position, additional_movement.position);
+				})
+			}
+
 			storeBoard.update(b => b);
 
 			console.log('move piece', destination.from_position, destination.position);

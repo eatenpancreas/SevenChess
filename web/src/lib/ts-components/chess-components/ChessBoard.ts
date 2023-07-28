@@ -99,5 +99,18 @@ export class ChessBoard {
 
 		board.calculateScores();
 	}
+
+	moveAdditionalPiece(from_x: number, from_y: number, to_x: number, to_y: number) {
+		const from_tile = this.getTile(from_x, from_y);
+		const to_tile = this.getTile(to_x, to_y);
+
+		if (!from_tile || !to_tile) return undefined;
+
+		to_tile.move_index = from_tile.move_index + 1;
+		to_tile.piece = from_tile.piece;
+		from_tile.piece = "  ";
+
+		this.calculateScores();
+	}
 }
 

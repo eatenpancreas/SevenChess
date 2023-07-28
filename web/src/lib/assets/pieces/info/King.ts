@@ -30,27 +30,29 @@ const King: PieceInfo = {
 		},
 		{ move: { x: 2, y: 0, amount: 1},
 			rules: {
-				moveIndexRule: (moveIndex) => moveIndex === 0,
+				customMoveRule: ({ moveIndex }) => moveIndex === 0,
 				needsPath: [{ x: 1, y: 0 }],
 				needsSafeSquares: [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }],
 
 				castlingRights: {
 					otherPiece: 'r',
-					otherPosition: { x: 7, y: 0 },
-					otherLandingSquare: { x: 5, y: 0 },
+					otherPosition: { x: 3, y: 0 },
+					otherLandingSquare: { x: 1, y: 0 },
+					otherCustomMoveRule: ({ moveIndex }) => moveIndex === 0,
 				},
 			},
 		},
 		{ move: { x: -2, y: 0, amount: 1},
 			rules: {
-				moveIndexRule: (moveIndex) => moveIndex === 0,
+				customMoveRule: ({ moveIndex }) => moveIndex === 0,
 				needsPath: [{ x: -1, y: 0 }, { x: -2, y: 0 }],
 				needsSafeSquares: [{ x: 0, y: 0 }, { x: -1, y: 0 }, { x: -2, y: 0 }, { x: -3, y: 0 }],
 
 				castlingRights: {
 					otherPiece: 'r',
-					otherPosition: { x: 0, y: 0 },
-					otherLandingSquare: { x: 3, y: 0 },
+					otherPosition: { x: -4, y: 0 },
+					otherLandingSquare: { x: -1, y: 0 },
+					otherCustomMoveRule: ({ moveIndex }) => moveIndex === 0,
 				},
 			},
 		},

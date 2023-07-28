@@ -12,23 +12,29 @@ export type Move = {
 }
 
 type MoveRules = {
-	needsPath?: v2[],
-	needsSafeSquares?: v2[],
+	needsPath?: v2[] | false,
+	needsSafeSquares?: v2[] | false,
 	canEnPassant?: boolean,
 
 	createsEnPassant?: boolean,
-	moveIndexRule?: (moveIndex: number) => boolean,
 	canPromote?: PieceTypeSimple[] | false,
 
 	canNotCapture?: boolean,
 	canNotMove?: boolean,
 
+	customMoveRule?: customMoveRule | false,
+
 	castlingRights?: {
 		otherPiece: PieceTypeSimple,
 		otherPosition: v2,
 		otherLandingSquare: v2,
-	}
+		otherCustomMoveRule: customMoveRule,
+	} | false,
 }
+
+type customMoveRule = (data: {
+	moveIndex: number,
+}) => boolean;
 
 type MoveDir = {
 	x: number,
@@ -37,12 +43,9 @@ type MoveDir = {
 }
 
 export type PieceType = "  "
-	| "kl"	| "kd"
-	| "ql"	| "qd"
-	| "rl"	| "rd"
-	| "bl"	| "bd"
-	| "nl"	| "nd"
-	| "pl"	| "pd"
+	| "kl"	| "kd" 	| "ql"	| "qd"
+	| "rl"	| "rd" 	| "bl"	| "bd"
+	| "nl"	| "nd" 	| "pl"	| "pd"
 
 export type PieceTypeSimple = "  "
 	| "k" | "q" | "r" | "b" | "n" | "p"
