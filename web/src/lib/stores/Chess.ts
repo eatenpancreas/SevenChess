@@ -3,5 +3,5 @@ import { type Writable, writable } from 'svelte/store';
 import { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
 
 export const board: Writable<ChessBoard> = writable(new ChessBoard());
-export const selected: Writable<v2> = writable(null);
+export const selected: Writable<v2 | null> = writable(null);
 export const destinations: Writable<Destination[]> = writable([]);

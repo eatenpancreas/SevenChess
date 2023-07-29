@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { destinations, board as storeBoard, selected } from '$lib/stores/Chess';
+	import { destinations } from '$lib/stores/Chess';
 	import { onDestroy } from 'svelte';
 	import type { Destination } from '$lib/types/chess/Main';
 	import { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
+	import { doMove } from '$lib/ts-components/chess-components/ChessMovementLib.js';
 
 	export let x = 0;
 	export let y = 0;
@@ -23,34 +24,8 @@
 	onDestroy(unsub);
 
 	export function doDestinationClick(board: ChessBoard) {
-		if (isDestination && destination && destination.from_position && destination.position) {
-
-			board.movePiece(
-				destination.from_position.x,
-				destination.from_position.y,
-				destination.position.x,
-				destination.position.y,
-			);
-
-			if (destination.additional_movements) {
-				destination.additional_movements.map(additional_movement => {
-					if (!additional_movement.from_position || !additional_movement.position) return;
-					board.moveAdditionalPiece(
-						additional_movement.from_position.x,
-						additional_movement.from_position.y,
-						additional_movement.position.x,
-						additional_movement.position.y,
-					);
-					console.log('move extra piece', additional_movement.from_position, additional_movement.position);
-				})
-			}
-
-			storeBoard.update(b => b);
-
-			console.log('move piece', destination.from_position, destination.position);
-
-			destinations.set([]);
-			selected.set(null);
+		if (isDestination && destination) {
+			doMove(destination, board);
 		}
 	}
 </script>

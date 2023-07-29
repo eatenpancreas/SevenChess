@@ -1,4 +1,4 @@
-import type { v2 } from '$lib/types/chess/Main';
+import type { Actions, MoveChannel, v2 } from '$lib/types/chess/Main';
 
 export type PieceInfo = {
 	piece: PieceTypeSimple;
@@ -14,9 +14,10 @@ export type Move = {
 type MoveRules = {
 	needsPath?: v2[] | false,
 	needsSafeSquares?: v2[] | false,
-	canEnPassant?: boolean,
 
-	createsEnPassant?: boolean,
+	listensToChannel?: Listener | false,
+	createsChannel?: string | false,
+
 	canPromote?: PieceTypeSimple[] | false,
 
 	canNotCapture?: boolean,
@@ -30,6 +31,12 @@ type MoveRules = {
 		otherLandingSquare: v2,
 		otherCustomMoveRule: customMoveRule,
 	} | false,
+}
+
+export type Listener = MoveChannel & CustomAction;
+
+type CustomAction = {
+	action: (actions: Actions) => void;
 }
 
 type customMoveRule = (data: {

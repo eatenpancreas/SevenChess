@@ -12,7 +12,7 @@
 	}
 </script>
 
-<div class='w-3xl mx-auto aspect-square'
+<div class='w-3xl mx-auto aspect-square flex items-center'
 		 style='max-width: 100vh'
 		 use:clickOutside on:click_outside={handleClickOutside}
 >

@@ -4,13 +4,12 @@ import type { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard'
 import { addDir } from '$lib/ts-components/chess-components/ChessMovementLib';
 
 
-export function add_move(
+export function add_destination(
 	destinations: &Destination[], x: number, y: number, piece: PieceType, move: Move,  board: ChessBoard | null | undefined
 ) {
 	if (!board) return;
-
 		const len = (move.move.amount === 'infinite'? Math.max(board.height, board.width) : move.move.amount);
-		let move_pos: v2 = { x: x, y: y }
+		let move_pos: v2 | null = { x: x, y: y }
 
 		console.log(piece + ", " + len);
 
@@ -57,6 +56,30 @@ export function add_move(
 				break;
 			}
 
+			if (move.rules.listensToChannel) {
+				const listener = move.rules.listensToChannel;
+				const anyChannels = board.move_channels.find(channel => {
+					return channel.name === listener.name;
+				})
+
+				if (!anyChannels) break;
+				if (anyChannels.position.x !== x + listener.position.x || anyChannels.position.y !== y + listener.position.y) break;
+
+				listener.action({
+					destroy: (position: v2) => {
+						board.destroyPiece(x + position.x, y + position.y);
+					},
+					move: (from: v2, to: v2) => {
+						destinations.push({
+							position: { x: x + to.x, y: y + to.y },
+							type: "MOVE",
+							from_position: { x: x + from.x, y: y + from.y },
+							piece_type: piece,
+						});
+					}
+				})
+			}
+
 			// castling move
 			if (move.rules.castlingRights) {
 				const castling = move.rules.castlingRights;
@@ -91,12 +114,21 @@ export function add_move(
 
 			// regular move
 			if (!move.rules.canNotMove) {
-				destinations.push({
+				const dest_regular: Destination = {
 					position: { x: move_pos.x, y: move_pos.y },
 					type: "MOVE",
 					from_position: { x: x, y: y },
 					piece_type: piece,
-				})
+				}
+
+				if (move.rules.createsChannel) {
+					dest_regular.creates_channel = {
+						position: { x: move_pos.x, y: move_pos.y },
+						name: move.rules.createsChannel,
+					}
+				}
+
+				destinations.push(dest_regular)
 			}
 	}
 }

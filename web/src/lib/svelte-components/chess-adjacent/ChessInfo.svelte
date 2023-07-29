@@ -1,5 +1,5 @@
 <script>
-	import { board } from '$lib/stores/Chess';
+	import { board} from '$lib/stores/Chess';
 
 	let move = 0;
 	let boardh = 0;
@@ -7,6 +7,8 @@
 	let scorel = 0;
 	let scored = 0;
 	let win = false;
+	let mc = ""
+
 	board.subscribe(board => {
 		move = board.move;
 		boardw = board.width;
@@ -14,7 +16,8 @@
 		scorel = board.scores.l;
 		scored = board.scores.d;
 		win = board.scores.win;
-	})
+		mc = JSON.stringify(board.move_channels);
+	});
 
 </script>
 
@@ -24,4 +27,5 @@
 	<p>Scores: l - {scorel}, d - {scored}</p>
 	<p>Win: {win}</p>
 	<p>It is {move % 2 === 0? "white's" : "black's"} turn.</p>
+	<p>Move channels: {mc}</p>
 </div>

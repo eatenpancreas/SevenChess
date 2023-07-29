@@ -1,7 +1,7 @@
 import { ChessTile } from '$lib/ts-components/chess-components/ChessTile';
 import { default_chessboard_tiles } from '$lib/ts-components/chess-components/DefaultChessBoard';
 import type { PieceType } from '$lib/types/chess/PieceInfo';
-import type { Scores } from '$lib/types/chess/Main';
+import type { Scores, MoveChannel } from '$lib/types/chess/Main';
 import { getPieceInfo } from '$lib/ts-components/chess-components/ChessPieceLib';
 
 export class ChessBoard {
@@ -10,6 +10,7 @@ export class ChessBoard {
 	width = 8;
 	scores: Scores = { win: false, l: 0, d: 0 }
 	tiles: ChessTile[] = [];
+	move_channels: MoveChannel[] = [];
 
 	constructor() {
 		default_chessboard_tiles.map(default_tile => {
@@ -98,6 +99,14 @@ export class ChessBoard {
 		from_tile.piece = "  ";
 
 		board.calculateScores();
+	}
+
+	destroyPiece(x: number, y: number) {
+		const tile = this.getTile(x, y);
+		if (!tile) return;
+
+		tile.piece = "  ";
+		tile.move_index = 0;
 	}
 
 	moveAdditionalPiece(from_x: number, from_y: number, to_x: number, to_y: number) {

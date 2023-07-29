@@ -1,4 +1,6 @@
-import type {PieceInfo} from '$lib/types/chess/PieceInfo';
+import type { Listener, PieceInfo, PieceTypeSimple } from '$lib/types/chess/PieceInfo';
+
+const promotions: PieceTypeSimple[] = ["q", "r", "b", "n"]
 
 const Pawn: PieceInfo = {
 	piece: "p",
@@ -6,33 +8,46 @@ const Pawn: PieceInfo = {
 	moves: [
 		{ move: { x: 1, y: 1, amount: 1},
 			rules: {
-				canEnPassant: true,
+				listensToChannel: enPassantListener(1),
 				canNotMove: true,
-				canPromote: ["q", "r", "b", "n"],
+				canPromote: promotions,
 			},
 		},
 		{ move: { x: 0, y: 1, amount: 1 },
 			rules: {
 				canNotCapture: true,
-				canPromote: ["q", "r", "b", "n"],
+				canPromote: promotions,
 			},
 		},
 		{ move: { x: -1, y: 1, amount: 1 },
 			rules: {
-				canEnPassant: true,
+				listensToChannel: enPassantListener(-1),
 				canNotMove: true,
-				canPromote: ["q", "r", "b", "n"],
+				canPromote: promotions,
 			},
 		},
 		{ move: { x: 0, y: 2, amount: 1 },
 			rules: {
-				createsEnPassant: true,
+				createsChannel: "en_passant",
 				customMoveRule: ({ moveIndex }) => moveIndex === 0,
 				canNotCapture: true,
 				needsPath: [{ x: 0, y: 1 }]
 			},
 		},
 	]
+}
+
+
+function enPassantListener(direction: number): Listener {
+	return {
+		position: { x: direction, y: 0 },
+		name: "en_passant",
+		action: ({ destroy, move }) => {
+			destroy({ x: direction, y: 0 });
+
+			move({ x: 0, y: 0 }, { x: direction, y: 1 });
+		},
+	}
 }
 
 export default Pawn;

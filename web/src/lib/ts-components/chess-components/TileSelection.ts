@@ -1,13 +1,12 @@
 import type { Destination, v2 } from '$lib/types/chess/Main';
-import pieceInfo from '$lib/assets/pieces/PieceInfo';
-import type { Move, PieceType } from '$lib/types/chess/PieceInfo';
-import { add_move } from '$lib/ts-components/chess-components/MoveDefines';
+import type { PieceType } from '$lib/types/chess/PieceInfo';
+import { add_destination } from '$lib/ts-components/chess-components/MoveDefines';
 import type { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
 import { getPieceInfo } from '$lib/ts-components/chess-components/ChessPieceLib';
 
 export function selectTile(
 	selectedPrev: any, x: number, y: number
-): v2 {
+): v2 | null {
 	if (selectedPrev && selectedPrev.x === x && selectedPrev.y === y) {
 		return null;
 	} else {
@@ -26,7 +25,7 @@ export function selectDestinations(
 
 	pieceInfo?.moves.map((move) => {
 		// new destination for every move
-		add_move(destinations, x, y, piece, move, board);
+		add_destination(destinations, x, y, piece, move, board);
 	})
 
 	return destinations
