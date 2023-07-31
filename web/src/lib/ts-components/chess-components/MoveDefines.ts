@@ -1,134 +1,170 @@
 import type { Destination, v2 } from '$lib/types/chess/Main';
-import type { Move, PieceType } from '$lib/types/chess/PieceInfo';
+import type { MoveRules, PieceType } from '$lib/types/chess/PieceInfo';
 import type { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
-import { addDir } from '$lib/ts-components/chess-components/ChessMovementLib';
+import { addV2, equalsV2 } from '$lib/ts-components/math/V2Lib';
 
+export default class MoveDefines {
+	destinations: &Destination[];
+	rules: MoveRules;
+	origin: v2;
+	board: ChessBoard;
+	piece: PieceType;
+	move_dir: v2;
+	move_position: v2;
 
-export function add_destination(
-	destinations: &Destination[], x: number, y: number, piece: PieceType, move: Move,  board: ChessBoard | null | undefined
-) {
-	if (!board) return;
-		const len = (move.move.amount === 'infinite'? Math.max(board.height, board.width) : move.move.amount);
-		let move_pos: v2 | null = { x: x, y: y }
+	constructor(
+		destinations: &Destination[], rules: MoveRules, origin: v2, board: ChessBoard, piece: PieceType, move_dir: v2
+	) {
+		this.destinations = destinations;
+		this.rules = rules;
+		this.origin = origin;
+		this.board = board;
+		this.piece = piece;
+		this.move_dir = move_dir;
+		this.move_position = this.dir(move_dir);
+	}
 
-		console.log(piece + ", " + len);
+	public disabledByCustomMoveRule(): boolean {
+		if (!this.rules.customMoveRule) return false;
 
-		for (let i = 0; i < len; i++) {
-			move_pos = addDir(move_pos, move.move.x, move.move.y, piece);
-			if (!move_pos || move_pos.x < 0 || move_pos.x >= board.width || move_pos.y < 0 || move_pos.y >= board.height) break;
+		const index = this.board.getTile(this.origin.x, this.origin.y)?.move_index;
+		if (index === undefined) return false;
 
-			// checks for custom
-			if (move.rules.customMoveRule) {
-				const index = board.getTile(x, y)?.move_index;
-				if (index === undefined) break;
+		// results in no destination if custom rule is returned false
+		return !this.rules.customMoveRule({
+			moveIndex: index,
+		});
+	}
 
-				// results in no destination if custom rule is returned false
-				if (!move.rules.customMoveRule({
-					moveIndex: index,
-				})) break;
-			}
+	public hasOccupiedPaths(): boolean {
+		let isOccupied = false;
+		if (!this.rules.needsPath) return false;
 
-			// checks all required paths
-			if (move.rules.needsPath) {
-				let doBreak = false;
-				move.rules.needsPath.map(path => {
-					if (!path) { doBreak = true; return; }
-					const pos = addDir({ x: x, y: y }, path.x, path.y, piece);
+		this.rules.needsPath.map(path => {
+			const pos = this.dir(path);
+			if (this.board.isOccupied(pos.x, pos.y)) isOccupied = true;
+		})
 
-					if (!pos) {
-						doBreak = true;
-					} else if (board.isOccupied(pos.x, pos.y)) doBreak = true;
-				})
+		return isOccupied
+	}
+	public doChannelListen(): boolean {
+		const listener = this.rules.listensToChannel;
+		if (!listener) return false;
 
-				if (doBreak) break;
-			}
+		const anyChannels = this.board.move_channels.find(channel => {
+			return channel.name === listener.name;
+		})
 
-			// capturing
-			if (board.isOccupied(move_pos.x, move_pos.y)) {
-				if (board.isOpponent(move_pos.x, move_pos.y, piece) && !move.rules.canNotCapture) {
-					destinations.push({
-						position: { x: move_pos.x, y: move_pos.y },
-						type: "CAPTURE",
-						from_position: { x: x, y: y },
-						piece_type: piece,
-					})
-				}
-				break;
-			}
+		if (!anyChannels) return false;
+		if (!equalsV2(anyChannels.position, this.dir(listener.position) )) return false;
 
-			if (move.rules.listensToChannel) {
-				const listener = move.rules.listensToChannel;
-				const anyChannels = board.move_channels.find(channel => {
-					return channel.name === listener.name;
-				})
-
-				if (!anyChannels) break;
-				if (anyChannels.position.x !== x + listener.position.x || anyChannels.position.y !== y + listener.position.y) break;
-
-				listener.action({
-					destroy: (position: v2) => {
-						board.destroyPiece(x + position.x, y + position.y);
-					},
-					move: (from: v2, to: v2) => {
-						destinations.push({
-							position: { x: x + to.x, y: y + to.y },
-							type: "MOVE",
-							from_position: { x: x + from.x, y: y + from.y },
-							piece_type: piece,
-						});
-					}
-				})
-			}
-
-			// castling move
-			if (move.rules.castlingRights) {
-				const castling = move.rules.castlingRights;
-
-				if (castling.otherPosition && castling.otherLandingSquare) {
-					const otherTile = board.getTile(x + castling.otherPosition.x, y + castling.otherPosition.y);
-					if (!otherTile) break;
-
-					console.log("xxxxx")
-
-					if (otherTile.piece.substr(0, 1) === castling.otherPiece
-						&& castling.otherCustomMoveRule({ moveIndex: otherTile.move_index })) {
-
-						console.log("castling");
-
-						destinations.push({
-							position: { x: move_pos.x, y: move_pos.y },
-							type: "CASTLE",
-							from_position: { x: x, y: y },
-							piece_type: piece,
-							additional_movements: [{
-								position: { x: x + castling.otherLandingSquare.x, y: y + castling.otherLandingSquare.y },
-								type: "CASTLE",
-								from_position: { x: x + castling.otherPosition.x, y: y + castling.otherPosition.y },
-								piece_type: otherTile.piece,
-							}]
-						})
-					}
-				}
-				break;
-			}
-
-			// regular move
-			if (!move.rules.canNotMove) {
-				const dest_regular: Destination = {
-					position: { x: move_pos.x, y: move_pos.y },
+		listener.action({
+			destroy: (position: v2) => {
+				this.board.destroyPiece(this.dir(position));
+			},
+			move: (from: v2, to: v2) => {
+				this.add_destination({
+					position: this.dir(to),
 					type: "MOVE",
-					from_position: { x: x, y: y },
-					piece_type: piece,
-				}
-
-				if (move.rules.createsChannel) {
-					dest_regular.creates_channel = {
-						position: { x: move_pos.x, y: move_pos.y },
-						name: move.rules.createsChannel,
-					}
-				}
-
-				destinations.push(dest_regular)
+					from_position: this.dir(from),
+					piece_type: this.piece,
+				});
 			}
+		})
+		return true;
+	}
+
+	public isFriendly(): boolean {
+		return !this.board.isOpponent(this.move_position.x, this.move_position.y, this.piece);
+	}
+
+
+	public doCastling(): boolean {
+		if (!this.rules.castlingRights) return false;
+
+		const castling = this.rules.castlingRights;
+
+		const t = this.dir(castling.otherPosition);
+		const otherTile = this.board.getTile(t.x, t.y);
+		if (!otherTile) return false;
+
+		if (otherTile.piece.substr(0, 1) !== castling.otherPiece
+			|| !castling.otherCustomMoveRule({ moveIndex: otherTile.move_index })) return false;
+
+		this.add_destination({
+			position: this.dir(this.move_dir),
+			type: "CASTLE",
+			from_position: this.origin,
+			piece_type: this.piece,
+			additional_movements: [{
+				position: this.dir(castling.otherLandingSquare),
+				type: "CASTLE",
+				from_position: this.dir(castling.otherPosition),
+				piece_type: otherTile.piece,
+			}]
+		})
+
+		return true;
+	}
+
+	public doCapture(): boolean {
+		if (this.rules.canNotCapture) return false;
+
+		const pos = this.dir(this.move_dir);
+		if (!this.board.isOccupied(pos.x, pos.y)) return false;
+
+		this.add_destination({
+			position: this.dir(this.move_dir),
+			type: "CAPTURE",
+			from_position: this.origin,
+			piece_type: this.piece,
+		});
+		return true;
+	}
+
+	public doRegularMove(): boolean {
+		if (this.rules.canNotMove) return false;
+
+		const pos = this.dir(this.move_dir);
+		if (this.board.isOccupied(pos.x, pos.y)) return false;
+
+		this.add_destination({
+			position: pos,
+			type: "MOVE",
+			from_position: this.origin,
+			piece_type: this.piece,
+		});
+		return true;
+	}
+
+	add_destination(destination: Destination) {
+		if (this.rules.createsChannel) {
+			destination.creates_channel = {
+				position: this.dir(this.move_dir),
+				name: this.rules.createsChannel,
+			}
+		}
+		this.destinations.push(destination);
+	}
+
+	dir(dir: v2) {
+		if (this.piece.substr(1, 1) === "d")
+		{ return { x: this.origin.x + dir.x, y: this.origin.y - dir.y }; }
+
+		return addV2(this.origin, dir);
 	}
 }
+
+//
+// export function hasUnsafePaths(
+// 	rules: MoveRules, x: number, y: number, board: ChessBoard, piece: PieceType
+// ): boolean {
+// 	let isUnsafe = false;
+// 	if (rules.needsSafeSquares) {
+// 		rules.needsSafeSquares.map(path => {
+// 			const pos = addDir({ x: x, y: y }, path.x, path.y, piece);
+// 			if (pos && board.isUnsafe(pos.x, pos.y)) isUnsafe = true;
+// 		})
+// 	}
+// 	return isUnsafe
+// }

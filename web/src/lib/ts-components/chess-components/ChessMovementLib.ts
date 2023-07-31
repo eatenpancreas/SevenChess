@@ -3,11 +3,6 @@ import type { PieceType } from '$lib/types/chess/PieceInfo';
 import { board as storeBoard, destinations, selected } from '$lib/stores/Chess';
 import type { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
 
-export function addDir(origin: v2, x_dir: number, y_dir: number, piece: PieceType): v2 | null {
-	if (!origin || !piece) return null;
-	return { x: origin.x + x_dir, y: origin.y + (piece.substr(1, 1) !== "d" ? y_dir : -y_dir) };
-}
-
 export function doMove(destination: Destination, board: ChessBoard) {
 	if (destination.from_position && destination.position) {
 

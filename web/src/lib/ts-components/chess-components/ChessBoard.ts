@@ -1,7 +1,7 @@
 import { ChessTile } from '$lib/ts-components/chess-components/ChessTile';
 import { default_chessboard_tiles } from '$lib/ts-components/chess-components/DefaultChessBoard';
 import type { PieceType } from '$lib/types/chess/PieceInfo';
-import type { Scores, MoveChannel } from '$lib/types/chess/Main';
+import type { Scores, MoveChannel, v2 } from '$lib/types/chess/Main';
 import { getPieceInfo } from '$lib/ts-components/chess-components/ChessPieceLib';
 
 export class ChessBoard {
@@ -80,6 +80,7 @@ export class ChessBoard {
 		const tile = board.getTile(x, y);
 		if (!tile) return false;
 
+		// if (tile.piece === "  ") return false;
 		return tile.piece.substr(1, 1) !== piece.substr(1, 1);
 	}
 
@@ -101,8 +102,8 @@ export class ChessBoard {
 		board.calculateScores();
 	}
 
-	destroyPiece(x: number, y: number) {
-		const tile = this.getTile(x, y);
+	destroyPiece(pos: v2) {
+		const tile = this.getTile(pos.x, pos.y);
 		if (!tile) return;
 
 		tile.piece = "  ";

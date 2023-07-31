@@ -11,7 +11,7 @@ export type Move = {
 	rules: MoveRules,
 }
 
-type MoveRules = {
+export type MoveRules = {
 	needsPath?: v2[] | false,
 	needsSafeSquares?: v2[] | false,
 
