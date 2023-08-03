@@ -1,7 +1,7 @@
 import { ChessTile } from '$lib/ts-components/chess-components/ChessTile';
 import { default_chessboard_tiles } from '$lib/ts-components/chess-components/DefaultChessBoard';
 import type { PieceType } from '$lib/types/chess/PieceInfo';
-import type { Scores, MoveChannel, v2 } from '$lib/types/chess/Main';
+import type { Scores, MoveChannel, v2, PromotionOccurrence, GameState } from '$lib/types/chess/Main';
 import { getPieceInfo } from '$lib/ts-components/chess-components/ChessPieceLib';
 
 export class ChessBoard {
@@ -9,8 +9,10 @@ export class ChessBoard {
 	height = 8;
 	width = 8;
 	scores: Scores = { win: false, l: 0, d: 0 }
+	state: GameState = { state: "PLAYING", player: "l" };
 	tiles: ChessTile[] = [];
 	move_channels: MoveChannel[] = [];
+	promotion?: PromotionOccurrence;
 
 	constructor() {
 		default_chessboard_tiles.map(default_tile => {
@@ -51,7 +53,7 @@ export class ChessBoard {
 	}
 
 	getTile(x: number, y: number): ChessTile | undefined { return ChessBoard.getTile(x, y, this); }
-	static getTile(x: number, y: number, board: ChessBoard): ChessTile | undefined {
+	static getTile(x: number, y: number, board: ChessBoard | null): ChessTile | undefined {
 		if (!board) return undefined;
 
 		const index = x + y * board.width;
@@ -94,12 +96,18 @@ export class ChessBoard {
 		if (!from_tile || !to_tile) return undefined;
 
 		to_tile.move_index = from_tile.move_index + 1;
-		board.move += 1;
 
 		to_tile.piece = from_tile.piece;
 		from_tile.piece = "  ";
 
 		board.calculateScores();
+	}
+
+	setPiece(pos: v2, piece: PieceType) {
+		const tile = this.getTile(pos.x, pos.y);
+		if (!tile) return;
+
+		tile.piece = piece;
 	}
 
 	destroyPiece(pos: v2) {

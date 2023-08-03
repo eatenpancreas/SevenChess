@@ -1,4 +1,4 @@
-import type { PieceType } from '$lib/types/chess/PieceInfo';
+import type { PieceType, PieceTypeSimple } from '$lib/types/chess/PieceInfo';
 
 export type v2  = {
 	x: number,
@@ -12,6 +12,14 @@ export type Destination = {
 	piece_type: PieceType,
 	additional_movements?: Destination[],
 	creates_channel?: MoveChannel,
+	promotes_to?: PieceTypeSimple[],
+}
+
+export type PromotionOccurrence = {
+	position: v2,
+	pieces: PieceType[],
+	player: PlayerType,
+	decision: (piece: PieceType) => void,
 }
 
 export type Actions = {
@@ -24,8 +32,15 @@ export type MoveChannel = {
 	name: string,
 }
 
+export type PlayerType = "l" | "d";
+
+export type GameState = {
+	state: "SELECTING" | "PLAYING";
+	player: PlayerType;
+}
+
 export type Scores = {
-	win: false | "l" | "d" | "draw",
+	win: false | PlayerType | "draw",
 	l: number,
 	d: number
 }

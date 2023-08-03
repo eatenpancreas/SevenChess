@@ -30,7 +30,10 @@
 	}
 </script>
 
-<div class='w-[95%] aspect-square
-{isDestination? " bg-black/10 " : " bg-white opacity-20 "}
-rounded-xl drop-shadow-[0_0px_12px_rgba(0,0,0,1)] overflow-hidden'>
+
+<div class='absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center'>
+	<div class='w-[95%] aspect-square
+	{isDestination? " bg-black/10 " : " bg-white opacity-20 "}
+	rounded-xl drop-shadow-[0_0px_12px_rgba(0,0,0,1)] overflow-hidden'>
+	</div>
 </div>

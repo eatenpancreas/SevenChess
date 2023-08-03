@@ -144,6 +144,10 @@ export default class MoveDefines {
 				name: this.rules.createsChannel,
 			}
 		}
+		if (this.rules.canPromote) {
+			destination.promotes_to = this.rules.canPromote;
+		}
+
 		this.destinations.push(destination);
 	}
 

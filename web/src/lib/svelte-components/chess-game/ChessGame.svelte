@@ -1,8 +1,10 @@
 <script>
 	import Row from '$lib/svelte-components/chess-game/Row.svelte';
 	import { clickOutside } from '$lib/ts-components/general/Click';
-	import { destinations, selected } from '$lib/stores/Chess';
+	import { board, destinations, selected } from '$lib/stores/Chess';
+	import { ChessBoard } from '$lib/ts-components/chess-components/ChessBoard';
 
+	board.set(new ChessBoard());
 
 	const flipped = true;
 
